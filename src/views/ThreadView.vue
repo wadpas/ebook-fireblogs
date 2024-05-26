@@ -14,23 +14,15 @@
 	import PostEditor from '../components/PostEditor.vue'
 
 	export default {
-		components: { PostList, PostEditor },
-
 		props: {
 			id: String,
 		},
-		data() {
-			return {
-				threads: sourceData.threads,
-				posts: sourceData.posts,
-			}
-		},
 		computed: {
 			thread() {
-				return this.threads.find((thread) => thread.id === this.id)
+				return sourceData.threads.find((thread) => thread.id === this.id)
 			},
 			threadPosts() {
-				return this.posts.filter((post) => post.threadId === this.id)
+				return sourceData.posts.filter((post) => post.threadId === this.id)
 			},
 		},
 		methods: {

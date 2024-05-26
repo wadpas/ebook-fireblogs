@@ -1,58 +1,35 @@
 <template>
-	<div class="col-full">
-		<div class="thread-list">
-			<h2 class="list-title">Threads</h2>
-			<div
-				v-for="thread in threads"
-				:key="thread.id"
-				class="thread">
-				<div>
-					<p>
-						<router-link :to="{ name: 'ThreadView', params: { id: thread.id } }">{{ thread.title }}</router-link>
-					</p>
-					<p class="text-faded text-xsmall">
-						By
-						<a href="#">{{ userById(thread.userId).name }}</a>
-						, {{ thread.publishedAt }}.
-					</p>
-				</div>
-				<div class="activity">
-					<p class="replies-count">{{ thread.posts.length }} replies</p>
-					<img
-						class="avatar-medium"
-						:src="userById(thread.userId).avatar"
-						alt="" />
-					<div>
-						<p class="text-xsmall">
-							<a href="#">{{ userById(thread.userId).name }}</a>
-						</p>
-						<p class="text-xsmall text-faded">{{ thread.publishedAt }}</p>
-					</div>
-				</div>
+	<div class="col-full push-top">
+		<div class="forum-header">
+			<div class="forum-details">
+				<h1>{{ forum.name }}</h1>
+				<p class="text-lead">{{ forum.description }}</p>
 			</div>
+			<a
+				href="new-thread.html"
+				class="btn-green btn-small">
+				Start a thread
+			</a>
 		</div>
 	</div>
+
+	<ThreadList :threads="forumThreads" />
 </template>
 
 <script>
 	import sourceData from '../data.json'
+	import ThreadList from '../components/ThreadList.vue'
 
 	export default {
 		props: {
-			threads: {
-				type: Array,
-				required: true,
+			id: String,
+		},
+		computed: {
+			forum() {
+				return sourceData.forums.find((forum) => forum.id === this.id)
 			},
-		},
-		data() {
-			return {
-				posts: sourceData.posts,
-				users: sourceData.users,
-			}
-		},
-		methods: {
-			userById(userId) {
-				return this.users.find((user) => user.id === userId)
+			forumThreads() {
+				return sourceData.threads.filter((post) => post.forumId === this.id)
 			},
 		},
 	}
