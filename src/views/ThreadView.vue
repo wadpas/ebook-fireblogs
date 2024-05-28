@@ -1,11 +1,9 @@
 <template>
-	<div class="col-large push-top">
-		<h1>{{ thread?.title }}</h1>
+	<h1>{{ thread.title }}</h1>
 
-		<PostList :posts="threadPosts" />
+	<PostList :posts="threadPosts" />
 
-		<PostEditor @save="addPost" />
-	</div>
+	<PostEditor @save="addPost" />
 </template>
 
 <script>
@@ -17,12 +15,17 @@
 		props: {
 			id: String,
 		},
+		data() {
+			return {
+				posts: sourceData.posts,
+			}
+		},
 		computed: {
 			thread() {
 				return sourceData.threads.find((thread) => thread.id === this.id)
 			},
 			threadPosts() {
-				return sourceData.posts.filter((post) => post.threadId === this.id)
+				return this.posts.filter((post) => post.threadId === this.id)
 			},
 		},
 		methods: {
@@ -32,6 +35,7 @@
 					...eventData.post,
 					threadId: this.id,
 				}
+
 				this.posts.push(post)
 				this.thread.posts.push(postId)
 			},

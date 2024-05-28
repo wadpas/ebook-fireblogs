@@ -1,4 +1,30 @@
 {
+	"categories": [
+		{
+			"forums": ["-KpOx5Y4AqRr3sB4Ybwj", "-KsjO4_W3W9Q2Z2UmuPr"],
+			"name": "Feedback & Information",
+			"slug": "feedback-and-information",
+			"id": "-KpR7vRkiRPpbUd_TVAR"
+		},
+		{
+			"forums": [
+				"-KsjPat5MWCx-dkjNVg8",
+				"-KsjPjasLh0TFtZmffEo",
+				"-Kvd1Vg_ankLYgrxC50F",
+				"-KvdCowY9mDvM0EH8Pvs",
+				"-KvhkEl6F673igPtnbso"
+			],
+			"name": "Discussions",
+			"slug": "discussions",
+			"id": "-KsjPKA6hDuHlQK_lJWO"
+		},
+		{
+			"forums": ["-Kvclvu_Qd9QdS9ciqUl", "-KvcmOcppNYK8NCesmB9"],
+			"name": "Comedy",
+			"slug": "comedy",
+			"id": "-KvclpNRjpI5W-j0JQGU"
+		}
+	],
 	"forums": [
 		{
 			"description": "Important announcements about the forum.",
@@ -76,7 +102,6 @@
 				"-KvhgwEcF6xG6Ovmqedl",
 				"-Kvhj8GxcZOvvNrWCK-W",
 				"-KvfyDwSUGBojOO4OKyX",
-				"-KxxSma_8IeF6kjukwnu",
 				"-KxxSnNltjgIvlwAjmW8"
 			],
 			"id": "-KvdCowY9mDvM0EH8Pvs"
@@ -85,7 +110,8 @@
 			"description": "The forum for anything",
 			"name": "Miscellaneous",
 			"slug": "miscellaneous",
-			"id": "-KvhkEl6F673igPtnbso"
+			"id": "-KvhkEl6F673igPtnbso",
+			"threads": ["-KxxSma_8IeF6kjukwnu"]
 		}
 	],
 	"posts": [
@@ -1186,7 +1212,7 @@
 		},
 		{
 			"firstPostId": "-KxxSma_8IeF6kjukwnv",
-			"forumId": "-KvdCowY9mDvM0EH8Pvs",
+			"forumId": "-KvhkEl6F673igPtnbso",
 			"lastPostAt": 1599638478,
 			"lastPostId": "-KxxSma_8IeF6kjukwnv",
 			"posts": ["-KxxSma_8IeF6kjukwnv"],

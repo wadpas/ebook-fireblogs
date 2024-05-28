@@ -7,6 +7,7 @@ import PostList from './components/PostList.vue'
 import PostEditor from './components/PostEditor.vue'
 import ForumView from './views/ForumView.vue'
 import ThreadList from './components/ThreadList.vue'
+import ForumList from './components/ForumList.vue'
 
 const app = createApp(App)
 	.use(router)
@@ -15,4 +16,5 @@ const app = createApp(App)
 	.component('PostEditor', PostEditor)
 	.component('ForumView', ForumView)
 	.component('ThreadList', ThreadList)
+	.component('ForumList', ForumList)
 	.mount('#app')

@@ -1,16 +1,14 @@
 <template>
-	<div class="col-full push-top">
-		<div class="forum-header">
-			<div class="forum-details">
-				<h1>{{ forum.name }}</h1>
-				<p class="text-lead">{{ forum.description }}</p>
-			</div>
-			<a
-				href="new-thread.html"
-				class="btn-green btn-small">
-				Start a thread
-			</a>
+	<div class="forum-header">
+		<div class="forum-details">
+			<h1>{{ forum.name }}</h1>
+			<p class="text-lead">{{ forum.description }}</p>
 		</div>
+		<a
+			href="new-thread.html"
+			class="btn-green btn-small">
+			Start a thread
+		</a>
 	</div>
 
 	<ThreadList :threads="forumThreads" />
@@ -18,7 +16,6 @@
 
 <script>
 	import sourceData from '../data.json'
-	import ThreadList from '../components/ThreadList.vue'
 
 	export default {
 		props: {
