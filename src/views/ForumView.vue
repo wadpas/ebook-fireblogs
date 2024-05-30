@@ -15,21 +15,17 @@
 </template>
 
 <script>
-	import sourceData from '../data.json'
-
 	export default {
 		props: {
 			id: String,
 		},
 		computed: {
 			forum() {
-				return sourceData.forums.find((forum) => forum.id === this.id)
+				return this.$store.state.forums.find((forum) => forum.id === this.id)
 			},
 			forumThreads() {
-				return sourceData.threads.filter((post) => post.forumId === this.id)
+				return this.$store.state.threads.filter((post) => post.forumId === this.id)
 			},
 		},
 	}
 </script>
-
-<style scoped></style>

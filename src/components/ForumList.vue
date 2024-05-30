@@ -22,8 +22,6 @@
 </template>
 
 <script>
-	import sourceData from '../data.json'
-
 	export default {
 		props: {
 			forums: Array,
@@ -31,7 +29,7 @@
 
 		methods: {
 			userById(userId) {
-				return sourceData.users.find((user) => user.id === userId)
+				return this.$store.state.users.find((user) => user.id === userId)
 			},
 		},
 	}

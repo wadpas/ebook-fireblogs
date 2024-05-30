@@ -7,7 +7,6 @@
 </template>
 
 <script>
-	import sourceData from '../data.json'
 	import PostList from '../components/PostList.vue'
 	import PostEditor from '../components/PostEditor.vue'
 
@@ -15,14 +14,12 @@
 		props: {
 			id: String,
 		},
-		data() {
-			return {
-				posts: sourceData.posts,
-			}
-		},
 		computed: {
+			posts() {
+				return this.$store.state.posts
+			},
 			thread() {
-				return sourceData.threads.find((thread) => thread.id === this.id)
+				return this.$store.state.threads.find((thread) => thread.id === this.id)
 			},
 			threadPosts() {
 				return this.posts.filter((post) => post.threadId === this.id)
@@ -30,14 +27,11 @@
 		},
 		methods: {
 			addPost(eventData) {
-				const postId = 'testId' + Math.random()
 				const post = {
 					...eventData.post,
 					threadId: this.id,
 				}
-
-				this.posts.push(post)
-				this.thread.posts.push(postId)
+				this.$store.dispatch('createPost', post)
 			},
 		},
 	}

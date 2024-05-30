@@ -13,25 +13,15 @@
 </template>
 
 <script>
-	import sourceData from '../data.json'
-
 	export default {
-		data() {
-			return {
-				categories: sourceData.categories,
-			}
-		},
-
-		methods: {
+		computed: {
 			categories() {
-				return sourceData.categories
+				return this.$store.state.categories
 			},
-
-			userById(userId) {
-				return sourceData.users.find((user) => user.id === userId)
-			},
+		},
+		methods: {
 			categoryForums(forumsId) {
-				return forumsId.map((id) => sourceData.forums.find((forum) => forum.id === id))
+				return forumsId.map((id) => this.$store.state.forums.find((forum) => forum.id === id))
 			},
 		},
 	}
