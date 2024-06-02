@@ -1,4 +1,5 @@
 <template>
+	<TheNavbar />
 	<div class="container">
 		<div class="col-full push-top">
 			<router-view />

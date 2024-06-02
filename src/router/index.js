@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import ThreadView from '../views/ThreadView.vue'
 import ForumView from '../views/ForumView.vue'
 import NotFound from '../views/NotFoundView.vue'
+import ProfileView from '../views/ProfileView.vue'
 import sourceData from '../data.json'
 
 const routes = [
@@ -10,6 +11,11 @@ const routes = [
 		path: '/',
 		name: 'HomeView',
 		component: HomeView,
+	},
+	{
+		path: '/me',
+		name: 'ProfileView',
+		component: ProfileView,
 	},
 	{
 		path: '/forums/:id',

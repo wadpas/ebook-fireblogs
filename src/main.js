@@ -9,6 +9,7 @@ import PostEditor from './components/PostEditor.vue'
 import ForumView from './views/ForumView.vue'
 import ThreadList from './components/ThreadList.vue'
 import ForumList from './components/ForumList.vue'
+import TheNavbar from './components/TheNavbar.vue'
 
 createApp(App)
 	.use(store)
@@ -19,4 +20,5 @@ createApp(App)
 	.component('ForumView', ForumView)
 	.component('ThreadList', ThreadList)
 	.component('ForumList', ForumList)
+	.component('TheNavbar', TheNavbar)
 	.mount('#app')
