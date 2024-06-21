@@ -10,6 +10,7 @@ import ForumView from './views/ForumView.vue'
 import ThreadList from './components/ThreadList.vue'
 import ForumList from './components/ForumList.vue'
 import TheNavbar from './components/TheNavbar.vue'
+import ProfileCard from './components/ProfileCard.vue'
 
 createApp(App)
 	.use(store)
@@ -21,4 +22,5 @@ createApp(App)
 	.component('ThreadList', ThreadList)
 	.component('ForumList', ForumList)
 	.component('TheNavbar', TheNavbar)
+	.component('ProfileCard', ProfileCard)
 	.mount('#app')
