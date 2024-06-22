@@ -11,6 +11,7 @@ import ThreadList from './components/ThreadList.vue'
 import ForumList from './components/ForumList.vue'
 import TheNavbar from './components/TheNavbar.vue'
 import ProfileCard from './components/ProfileCard.vue'
+import ProfileCardEditor from './components/ProfileCardEditor.vue'
 
 createApp(App)
 	.use(store)
@@ -23,4 +24,5 @@ createApp(App)
 	.component('ForumList', ForumList)
 	.component('TheNavbar', TheNavbar)
 	.component('ProfileCard', ProfileCard)
+	.component('ProfileCardEditor', ProfileCardEditor)
 	.mount('#app')
