@@ -27,7 +27,7 @@
 							:src="authUser.avatar"
 							:alt="`${authUser.name} profile picture`" />
 						<span>
-							{{ authUser.name }}
+							{{ authUser.username }}
 							<img
 								class="icon-profile"
 								src="../assets/arrow-profile.svg"
