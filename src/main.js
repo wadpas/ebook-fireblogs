@@ -7,6 +7,7 @@ import AppDate from './components/AppDate.vue'
 import PostList from './components/PostList.vue'
 import PostEditor from './components/PostEditor.vue'
 import ForumView from './views/ForumView.vue'
+import ThreadCreate from './views/ThreadCreate.vue'
 import ThreadList from './components/ThreadList.vue'
 import ForumList from './components/ForumList.vue'
 import TheNavbar from './components/TheNavbar.vue'
@@ -20,6 +21,7 @@ createApp(App)
 	.component('PostList', PostList)
 	.component('PostEditor', PostEditor)
 	.component('ForumView', ForumView)
+	.component('ThreadCreate', ThreadCreate)
 	.component('ThreadList', ThreadList)
 	.component('ForumList', ForumList)
 	.component('TheNavbar', TheNavbar)
