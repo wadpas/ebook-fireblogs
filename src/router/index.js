@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ThreadView from '../views/ThreadView.vue'
 import ThreadCreate from '../views/ThreadCreate.vue'
+import ThreadEdit from '../views/ThreadEdit.vue'
 import ForumView from '../views/ForumView.vue'
 import NotFound from '../views/NotFoundView.vue'
 import ProfileView from '../views/ProfileView.vue'
@@ -54,6 +55,12 @@ const routes = [
 		path: '/forums/:forumId/threads/create',
 		name: 'ThreadCreate',
 		component: ThreadCreate,
+		props: true,
+	},
+	{
+		path: '/threads/:id/edit',
+		name: 'ThreadEdit',
+		component: ThreadEdit,
 		props: true,
 	},
 	{
