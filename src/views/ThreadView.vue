@@ -1,5 +1,14 @@
 <template>
-	<h1>{{ thread.title }}</h1>
+	<h1>
+		{{ thread.title }}
+
+		<router-link
+			:to="{ name: 'ThreadEdit', id: this.id }"
+			class="btn-green btn-small"
+			tag="button">
+			Edit
+		</router-link>
+	</h1>
 
 	<PostList :posts="threadPosts" />
 

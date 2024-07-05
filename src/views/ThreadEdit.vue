@@ -32,14 +32,11 @@
 					id: this.id,
 					title,
 				})
-				this.$store.dispatch('createPost', {
-					threadId: thread.id,
-					text,
-				})
 				this.$router.push({ name: 'ThreadView', params: { id: thread.id } })
 			},
+
 			cancel() {
-				this.$router.push({ name: 'ForumView', params: { id: this.forum.id } })
+				this.$router.push({ name: 'ThreadView', params: { id: this.id } })
 			},
 		},
 	}

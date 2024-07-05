@@ -31,7 +31,7 @@
 				class="btn btn-blue"
 				type="submit"
 				name="Publish">
-				Publish
+				{{ existing ? 'Update' : 'Publish' }}
 			</button>
 		</div>
 	</form>
@@ -52,7 +52,11 @@
 				},
 			}
 		},
-
+		computed: {
+			existing() {
+				return !!this.title
+			},
+		},
 		methods: {
 			save() {
 				this.$emit('save', { ...this.form })
