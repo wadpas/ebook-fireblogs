@@ -11,7 +11,7 @@
 		</router-link>
 	</div>
 
-	<ThreadList :threads="forumThreads" />
+	<ThreadList :threads="threads" />
 </template>
 
 <script>
@@ -23,8 +23,8 @@
 			forum() {
 				return this.$store.state.forums.find((forum) => forum.id === this.id)
 			},
-			forumThreads() {
-				return this.$store.state.threads.filter((post) => post.forumId === this.id)
+			threads() {
+				return this.forum.threads.map((threadId) => this.$store.getters.thread(threadId))
 			},
 		},
 	}

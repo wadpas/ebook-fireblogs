@@ -31,6 +31,7 @@
 				const thread = await this.$store.dispatch('updateThread', {
 					id: this.id,
 					title,
+					text,
 				})
 				this.$router.push({ name: 'ThreadView', params: { id: thread.id } })
 			},

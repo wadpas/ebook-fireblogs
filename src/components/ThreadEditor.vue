@@ -59,6 +59,7 @@
 		},
 		methods: {
 			save() {
+				console.log(this.form)
 				this.$emit('save', { ...this.form })
 			},
 		},

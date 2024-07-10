@@ -5,6 +5,6 @@ export const upsert = (res, data) => {
 	if (data.id && index !== -1) {
 		res[index] = data
 	} else {
-		res.push(post)
+		res.push(data)
 	}
 }
