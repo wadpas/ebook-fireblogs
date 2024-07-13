@@ -16,11 +16,9 @@
 						:src="userById(post.userId).avatar"
 						alt="" />
 				</a>
-
 				<p class="desktop-only text-small">{{ userById(post.userId).postsCount }} posts</p>
 				<p class="desktop-only text-small">{{ userById(post.userId).threadsCount }} threads</p>
 			</div>
-
 			<div class="post-content">
 				<div>
 					<p>
