@@ -14,6 +14,7 @@ import TheNavbar from './components/TheNavbar.vue'
 import ProfileCard from './components/ProfileCard.vue'
 import ProfileCardEditor from './components/ProfileCardEditor.vue'
 import ThreadEditor from './components/ThreadEditor.vue'
+import firebaseConfig from './config/firebase'
 import firebase from 'firebase/app'
 
 firebase.initializeApp(firebaseConfig)

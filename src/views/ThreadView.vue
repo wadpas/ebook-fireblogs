@@ -14,14 +14,14 @@
 		<a
 			href="#"
 			class="link-unstyled">
-			{{ thread.author.name }}
+			{{ thread.author?.name }}
 		</a>
 		,
 		<AppDate :timestamp="thread.publishedAt" />
 		<span
 			style="float: right; margin-top: 2px"
 			class="hide-mobile text-faded text-small">
-			{{ thread.repliesCount }} replies by {{ thread.contributorsCount }} contributors
+			{{ thread?.repliesCount }} replies by {{ thread?.contributorsCount }} contributors
 		</span>
 	</p>
 	<PostList :posts="threadPosts" />
@@ -57,6 +57,14 @@
 				}
 				this.$store.dispatch('createPost', post)
 			},
+		},
+		async created() {
+			const thread = await this.$store.dispatch('fetchThread', { id: this.id })
+			this.$store.dispatch('fetchUser', { id: thread.userId })
+
+			const posts = await this.$store.dispatch('fetchPosts', { ids: thread.posts })
+			const usersIds = posts.map((post) => post.userId)
+			this.$store.dispatch('fetchUsers', { ids: usersIds })
 		},
 	}
 </script>

@@ -1,10 +1,14 @@
 import { createStore } from 'vuex'
-import { findById, upsert } from '../helpers'
-import sourceData from '../data.json'
+import { upsert } from '../helpers'
+import firebase from 'firebase'
 
 export default createStore({
 	state: {
-		...sourceData,
+		categories: [],
+		forums: [],
+		threads: [],
+		posts: [],
+		users: [],
 		authId: '7uVPJS9GHoftN58Z2MXCYDqmNAh2',
 	},
 
@@ -14,7 +18,7 @@ export default createStore({
 		},
 		user: (state) => {
 			return (id) => {
-				const user = findById(state.users, id)
+				const user = state.users.find((item) => item.id === id)
 				if (!user) return null
 				return {
 					...user,
@@ -35,17 +39,17 @@ export default createStore({
 		},
 		thread: (state) => {
 			return (id) => {
-				const thread = findById(state.threads, id)
+				const thread = state.threads.find((item) => item.id === id)
 				return {
 					...thread,
 					get author() {
-						return findById(state.users, thread.userId)
+						return state.users.find((item) => item.id === thread.userId)
 					},
 					get repliesCount() {
-						return thread.posts.length - 1
+						return thread?.posts.length - 1
 					},
 					get contributorsCount() {
-						return thread.contributors.length
+						return thread?.contributors.length
 					},
 				}
 			}
@@ -58,7 +62,7 @@ export default createStore({
 			post.userId = state.authId
 			post.publishedAt = Math.floor(Date.now() / 1000)
 
-			commit('setPost', { post })
+			commit('setItem', { resource: 'users', item: post })
 			commit('appendPostToThread', { parentId: post.threadId, childId: post.id })
 			commit('appendContributorToThread', { parentId: post.threadId, childId: state.authId })
 		},
@@ -68,7 +72,7 @@ export default createStore({
 			const userId = state.authId
 			const publishedAt = Math.floor(Date.now() / 1000)
 			const thread = { forumId, title, publishedAt, userId, id }
-			commit('setThread', { thread })
+			commit('setItem', { resource: 'threads', item: thread })
 			commit('appendThreadToForum', { parentId: forumId, childId: id })
 			commit('appendThreadToUser', { parentId: userId, threadId: id })
 			return findById(state.threads, id)
@@ -79,28 +83,63 @@ export default createStore({
 			const post = findById(state.posts, thread.posts[0])
 			const newThread = { ...thread, title }
 			const newPost = { ...post, text }
-			commit('setThread', { thread: newThread })
-			commit('setPost', { post: newPost })
+			commit('setItem', { resource: 'threads', item: newThread })
+			commit('setItem', { resource: 'users', item: newPost })
 			return newThread
 		},
 
 		updateUser({ commit }, user) {
-			commit('setUser', { user, userId: user.id })
+			commit('setItem', { resource: 'users', item: user.id })
+		},
+
+		fetchThread({ dispatch }, { id }) {
+			return dispatch('fetchItem', { resource: 'threads', id })
+		},
+
+		fetchUser({ dispatch }, { id }) {
+			return dispatch('fetchItem', { resource: 'users', id })
+		},
+
+		fetchPost({ dispatch }, { id }) {
+			return dispatch('fetchItem', { resource: 'posts', id })
+		},
+
+		fetchThreads({ dispatch }, { ids }) {
+			return dispatch('fetchItems', { resource: 'threads', ids })
+		},
+
+		fetchUsers({ dispatch }, { ids }) {
+			return dispatch('fetchItems', { resource: 'users', ids })
+		},
+
+		fetchPosts({ dispatch }, { ids }) {
+			return dispatch('fetchItems', { resource: 'posts', ids })
+		},
+
+		fetchItem({ state, commit }, { id, resource }) {
+			return new Promise((resolve) => {
+				firebase
+					.firestore()
+					.collection(resource)
+					.doc(id)
+					.onSnapshot((doc) => {
+						const item = { ...doc.data(), id: doc.id }
+						commit('setItem', { resource, item })
+						resolve(item)
+					})
+			})
+		},
+
+		fetchItems({ dispatch }, { ids, resource }) {
+			return Promise.all(ids.map((id) => dispatch('fetchItem', { resource, id }))).catch((error) => {
+				console.log(error)
+			})
 		},
 	},
 
 	mutations: {
-		setPost(state, { post }) {
-			upsert(state.posts, post)
-		},
-
-		setThread(state, { thread }) {
-			upsert(state.threads, thread)
-		},
-
-		setUser(state, { user, userId }) {
-			const userIndex = state.users.findIndex((user) => user.id === userId)
-			state.users[userIndex] = user
+		setItem(state, { resource, item }) {
+			upsert(state[resource], item)
 		},
 
 		appendPostToThread: appendMutation({ parent: 'threads', child: 'posts' }),
