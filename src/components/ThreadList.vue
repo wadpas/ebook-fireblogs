@@ -36,6 +36,8 @@
 </template>
 
 <script>
+	import { findById } from '../helpers/index'
+
 	export default {
 		props: {
 			threads: Array,
@@ -43,7 +45,7 @@
 
 		methods: {
 			userById(userId) {
-				return this.$store.state.users.find((user) => user.id === userId)
+				return findById(this.$store.state.users, userId) || {}
 			},
 		},
 	}

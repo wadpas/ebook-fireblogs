@@ -7,8 +7,7 @@
 		<h2 class="list-title">
 			<a>{{ category.name }}</a>
 		</h2>
-
-		<ForumList :forums="categoryForums(category.forums)" />
+		<ForumList :forumIds="category.forums" />
 	</div>
 </template>
 
@@ -19,10 +18,11 @@
 				return this.$store.state.categories
 			},
 		},
-		methods: {
-			categoryForums(forumsId) {
-				return forumsId.map((id) => this.$store.state.forums.find((forum) => forum.id === id))
-			},
+
+		async beforeCreate() {
+			const categories = await this.$store.dispatch('fetchAllCategories')
+			const forumIds = categories.map((category) => category.forums).flat()
+			this.$store.dispatch('fetchForums', { ids: forumIds })
 		},
 	}
 </script>

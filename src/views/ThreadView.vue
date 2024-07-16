@@ -21,7 +21,7 @@
 		<span
 			style="float: right; margin-top: 2px"
 			class="hide-mobile text-faded text-small">
-			{{ thread?.repliesCount }} replies by {{ thread?.contributorsCount }} contributors
+			{{ thread.posts?.length - 1 }} replies by {{ thread.contributors?.length }} contributors
 		</span>
 	</p>
 	<PostList :posts="threadPosts" />
@@ -33,6 +33,7 @@
 	import PostList from '../components/PostList.vue'
 	import PostEditor from '../components/PostEditor.vue'
 	import AppDate from '../components/AppDate.vue'
+	import { findById } from '../helpers/index'
 
 	export default {
 		props: {
@@ -41,6 +42,9 @@
 		computed: {
 			posts() {
 				return this.$store.state.posts
+			},
+			users() {
+				return this.$store.state.users
 			},
 			thread() {
 				return this.$store.getters.thread(this.id)
@@ -59,10 +63,16 @@
 			},
 		},
 		async created() {
-			const thread = await this.$store.dispatch('fetchThread', { id: this.id })
+			const thread =
+				findById(this.$store.state.threads, this.id) || (await this.$store.dispatch('fetchThread', { id: this.id }))
 			this.$store.dispatch('fetchUser', { id: thread.userId })
 
-			const posts = await this.$store.dispatch('fetchPosts', { ids: thread.posts })
+			const posts =
+				findById(this.$store.state.posts, thread.posts[0]) ||
+				(await this.$store.dispatch('fetchPosts', { ids: thread.posts }))
+
+			console.log(posts)
+
 			const usersIds = posts.map((post) => post.userId)
 			this.$store.dispatch('fetchUsers', { ids: usersIds })
 		},

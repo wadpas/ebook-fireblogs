@@ -1,5 +1,7 @@
 <template>
-	<div class="col-full push-top">
+	<div
+		v-if="forum"
+		class="col-full push-top">
 		<h1>
 			Create new thread in
 			{{ forum.name }}
@@ -11,6 +13,8 @@
 </template>
 
 <script>
+	import { findById } from '../helpers/index'
+
 	export default {
 		props: {
 			forumId: {
@@ -20,7 +24,7 @@
 		},
 		computed: {
 			forum() {
-				return this.$store.state.forums.find((forum) => forum.id === this.forumId)
+				return findById(this.$store.state.forums, this.forumId)
 			},
 		},
 		data() {
@@ -31,19 +35,19 @@
 		},
 		methods: {
 			async save({ title, text }) {
-				const thread = await this.$store.dispatch('createThread', {
+				const newThread = await this.$store.dispatch('createThread', {
 					forumId: this.forumId,
 					title,
-				})
-				this.$store.dispatch('createPost', {
-					threadId: thread.id,
 					text,
 				})
-				this.$router.push({ name: 'ThreadView', params: { id: thread.id } })
+				this.$router.push({ name: 'ThreadView', params: { id: newThread.id } })
 			},
 			cancel() {
 				this.$router.push({ name: 'ForumView', params: { id: this.forum.id } })
 			},
+		},
+		created() {
+			this.$store.dispatch('fetchForum', { id: this.forumId })
 		},
 	}
 </script>

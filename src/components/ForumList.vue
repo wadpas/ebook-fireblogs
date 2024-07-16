@@ -1,20 +1,19 @@
 <template>
 	<div
 		class="forum-listing"
-		v-for="forum in forums">
+		v-for="forumId in forumIds">
 		<div class="forum-details">
 			<router-link
-				:to="{ name: 'ForumView', params: { id: forum.id } }"
+				:to="{ name: 'ForumView', params: { id: forumId } }"
 				class="text-xlarge">
-				{{ forum.name }}
+				{{ forumById(forumId).name }}
 			</router-link>
-			<p>{{ forum.description }}</p>
+			<p>{{ forumById(forumId).description }}</p>
 		</div>
-
 		<div class="threads-count">
 			<p>
-				<span class="count">{{ forum.threads.length }}</span>
-				{{ forum.threads.length > 1 ? 'threads' : 'thread' }}
+				<span class="count">{{ forumById(forumId).threads?.length }}</span>
+				{{ forumById(forumId).threads?.length > 1 ? 'threads' : 'thread' }}
 			</p>
 		</div>
 		<div class="last-thread"></div>
@@ -24,12 +23,15 @@
 <script>
 	export default {
 		props: {
-			forums: Array,
+			forumIds: Array,
 		},
 
 		methods: {
 			userById(userId) {
-				return this.$store.state.users.find((user) => user.id === userId)
+				return this.$store.getters.user(userId)
+			},
+			forumById(forumId) {
+				return this.$store.getters.forum(forumId)
 			},
 		},
 	}
