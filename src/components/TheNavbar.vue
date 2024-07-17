@@ -80,8 +80,5 @@
 		computed: {
 			...mapGetters(['authUser']),
 		},
-		created() {
-			this.$store.dispatch('fetchUser', { id: this.$store.state.authId })
-		},
 	}
 </script>

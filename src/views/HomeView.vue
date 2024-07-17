@@ -12,19 +12,22 @@
 </template>
 
 <script>
+	import { mapActions } from 'vuex'
+
 	export default {
 		computed: {
 			categories() {
 				return this.$store.state.categories
 			},
 		},
+		methods: {
+			...mapActions(['fetchAllCategories', 'fetchForums']),
+		},
 
-		async beforeCreate() {
-			const categories = await this.$store.dispatch('fetchAllCategories')
+		async created() {
+			const categories = await this.fetchAllCategories()
 			const forumIds = categories.map((category) => category.forums).flat()
-			this.$store.dispatch('fetchForums', { ids: forumIds })
+			this.fetchForums({ ids: forumIds })
 		},
 	}
 </script>
-
-<style scoped></style>

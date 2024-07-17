@@ -7,4 +7,15 @@
 	</div>
 </template>
 
-<script></script>
+<script>
+	import { mapActions } from 'vuex'
+
+	export default {
+		methods: {
+			...mapActions(['fetchAuthUser']),
+		},
+		created() {
+			this.fetchAuthUser()
+		},
+	}
+</script>

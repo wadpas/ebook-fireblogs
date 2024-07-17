@@ -34,6 +34,7 @@
 	import PostEditor from '../components/PostEditor.vue'
 	import AppDate from '../components/AppDate.vue'
 	import { findById } from '../helpers/index'
+	import { mapActions } from 'vuex'
 
 	export default {
 		props: {
@@ -54,27 +55,19 @@
 			},
 		},
 		methods: {
+			...mapActions(['fetchThread', 'fetchUsers', 'fetchPosts', 'createPost']),
 			addPost(eventData) {
-				const post = {
-					...eventData.post,
-					threadId: this.id,
-				}
-				this.$store.dispatch('createPost', post)
+				const post = { ...eventData.post, threadId: this.id }
+				this.createPost(post)
 			},
 		},
 		async created() {
-			const thread =
-				findById(this.$store.state.threads, this.id) || (await this.$store.dispatch('fetchThread', { id: this.id }))
-			this.$store.dispatch('fetchUser', { id: thread.userId })
+			const thread = await this.fetchThread({ id: this.id })
 
-			const posts =
-				findById(this.$store.state.posts, thread.posts[0]) ||
-				(await this.$store.dispatch('fetchPosts', { ids: thread.posts }))
+			const posts = await this.fetchPosts({ ids: thread.posts })
 
-			console.log(posts)
-
-			const usersIds = posts.map((post) => post.userId)
-			this.$store.dispatch('fetchUsers', { ids: usersIds })
+			const usersIds = posts.map((post) => post.userId).concat(thread.userId)
+			this.fetchUsers({ ids: usersIds })
 		},
 	}
 </script>

@@ -14,6 +14,7 @@
 
 <script>
 	import { findById } from '../helpers/index'
+	import { mapActions } from 'vuex'
 
 	export default {
 		props: {
@@ -34,8 +35,9 @@
 			}
 		},
 		methods: {
+			...mapActions(['fetchForum', 'createThread']),
 			async save({ title, text }) {
-				const newThread = await this.$store.dispatch('createThread', {
+				const newThread = await this.createThread({
 					forumId: this.forumId,
 					title,
 					text,
@@ -47,7 +49,7 @@
 			},
 		},
 		created() {
-			this.$store.dispatch('fetchForum', { id: this.forumId })
+			this.fetchForum({ id: this.forumId })
 		},
 	}
 </script>
