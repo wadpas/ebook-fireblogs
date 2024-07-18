@@ -33,7 +33,6 @@
 	import PostList from '../components/PostList.vue'
 	import PostEditor from '../components/PostEditor.vue'
 	import AppDate from '../components/AppDate.vue'
-	import { findById } from '../helpers/index'
 	import { mapActions } from 'vuex'
 
 	export default {

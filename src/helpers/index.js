@@ -3,11 +3,15 @@ export const findById = (resources, id) => {
 	return resources.find((r) => r.id === id)
 }
 
-export const upsert = (res, data) => {
-	const index = res.findIndex((item) => item.id === data.id)
-	if (data.id && index !== -1) {
-		res[index] = data
+export const upsert = (resources, resource) => {
+	const index = resources.findIndex((p) => p.id === resource.id)
+	if (resource.id && index !== -1) {
+		resources[index] = resource
 	} else {
-		res.push(data)
+		resources.push(resource)
 	}
+}
+export const docToResource = (doc) => {
+	if (typeof doc?.data !== 'function') return doc
+	return { ...doc.data(), id: doc.id }
 }

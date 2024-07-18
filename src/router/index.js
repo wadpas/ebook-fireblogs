@@ -6,7 +6,7 @@ import ThreadEdit from '../views/ThreadEdit.vue'
 import ForumView from '../views/ForumView.vue'
 import NotFound from '../views/NotFoundView.vue'
 import ProfileView from '../views/ProfileView.vue'
-import sourceData from '../data.json'
+import store from '../store/index'
 
 const routes = [
 	{
@@ -37,19 +37,6 @@ const routes = [
 		name: 'ThreadView',
 		component: ThreadView,
 		props: true,
-		// beforeEnter(to, from, next) {
-		// 	const threadExists = sourceData.threads.find((thread) => thread.id === to.params.id)
-		// 	if (threadExists) {
-		// 		next()
-		// 	} else {
-		// 		next({
-		// 			name: 'NotFound',
-		// 			params: { pathMatch: to.path.substring(1).split('/') },
-		// 			query: to.query,
-		// 			hash: to.hash,
-		// 		})
-		// 	}
-		// },
 	},
 	{
 		path: '/forums/:forumId/threads/create',
@@ -79,6 +66,9 @@ const router = createRouter({
 		if (to.meta?.smoothScroll) scroll.behavior = 'smooth'
 		return scroll
 	},
+})
+router.beforeEach(() => {
+	store.dispatch('unsubscribeSnapshots')
 })
 
 export default router

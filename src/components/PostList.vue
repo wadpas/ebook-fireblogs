@@ -22,14 +22,32 @@
 				<p class="desktop-only text-small">{{ userById(post.userId).threadsCount }} threads</p>
 			</div>
 			<div class="post-content">
-				<div>
-					<p>
+				<div class="col-full">
+					<PostEditor
+						v-if="editing === post.id"
+						@save="handleUpdate"
+						:post="post">
+						Edit Mode
+					</PostEditor>
+					<p v-else>
 						{{ post.text }}
 					</p>
 				</div>
+				<a
+					v-if="post.userId === $store.state.authId"
+					@click.prevent="toggleEditMode(post.id)"
+					href="#"
+					style="margin-left: auto; padding-left: 10px"
+					class="link-unstyled"
+					title="Make a change">
+					<fa icon="pencil-alt" />
+				</a>
 			</div>
 
 			<div class="post-date text-faded">
+				<div
+					v-if="post.edited?.at"
+					class="edition-info"></div>
 				<AppDate :timestamp="post.publishedAt" />
 			</div>
 		</div>
@@ -37,14 +55,29 @@
 </template>
 
 <script>
+	import PostEditor from './PostEditor.vue'
+	import { mapActions } from 'vuex'
+
 	export default {
 		props: {
 			posts: Array,
 		},
-
+		data() {
+			return {
+				editing: null,
+			}
+		},
 		methods: {
+			...mapActions(['updatePost']),
 			userById(userId) {
 				return this.$store.getters.user(userId)
+			},
+			toggleEditMode(id) {
+				this.editing = id === this.editing ? null : id
+			},
+			handleUpdate(event) {
+				this.updatePost(event.post)
+				this.editing = null
 			},
 		},
 	}

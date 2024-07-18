@@ -1,23 +1,42 @@
 import firebase from 'firebase'
-import { findById } from '../helpers'
+import { findById, docToResource } from '../helpers'
 
 export default {
 	async createPost({ commit, state }, post) {
 		post.userId = state.authId
 		post.publishedAt = firebase.firestore.FieldValue.serverTimestamp()
-		const batch = firebase.firestore().batch()
 		const postRef = firebase.firestore().collection('posts').doc()
 		const threadRef = firebase.firestore().collection('threads').doc(post.threadId)
+		const userRef = firebase.firestore().collection('threads').doc(state.authId)
+		const batch = firebase.firestore().batch()
 		batch.set(postRef, post)
 		batch.update(threadRef, {
 			posts: firebase.firestore.FieldValue.arrayUnion(postRef.id),
 			contributors: firebase.firestore.FieldValue.arrayUnion(post.userId),
+		})
+		batch.update(userRef, {
+			postCount: firebase.firestore.FieldValue.increment(1),
 		})
 		await batch.commit()
 		const newPost = await postRef.get()
 		commit('setItem', { resource: 'posts', item: { ...newPost.data(), id: postRef.id } })
 		commit('appendPostToThread', { parentId: post.threadId, childId: postRef.id })
 		commit('appendContributorToThread', { parentId: post.threadId, childId: state.authId })
+	},
+
+	async updatePost({ commit, state }, { text, id }) {
+		const post = {
+			text,
+			edited: {
+				at: firebase.firestore.FieldValue.serverTimestamp(),
+				by: state.authId,
+				moderated: false,
+			},
+		}
+		const postRef = firebase.firestore().collection('posts').doc(id)
+		await postRef.update(post)
+		const updatedPost = await postRef.get()
+		commit('setItem', { resource: 'posts', item: updatedPost })
 	},
 
 	async createThread({ commit, state, dispatch }, { text, title, forumId }) {
@@ -47,11 +66,19 @@ export default {
 	async updateThread({ commit, state }, { title, text, id }) {
 		const thread = findById(state.threads, id)
 		const post = findById(state.posts, thread.posts[0])
-		const newThread = { ...thread, title }
-		const newPost = { ...post, text }
+		let newThread = { ...thread, title }
+		let newPost = { ...post, text }
+		const threadRef = firebase.firestore().collection('threads').doc(id)
+		const postRef = firebase.firestore().collection('posts').doc(post.id)
+		const batch = firebase.firestore().batch()
+		batch.update(threadRef, newThread)
+		batch.update(postRef, newPost)
+		await batch.commit()
+		newThread = await threadRef.get()
+		newPost = await postRef.get()
 		commit('setItem', { resource: 'threads', item: newThread })
 		commit('setItem', { resource: 'users', item: newPost })
-		return newThread
+		return docToResource(newThread)
 	},
 
 	updateUser({ commit }, user) {
@@ -87,7 +114,7 @@ export default {
 
 	fetchItem({ state, commit }, { id, resource }) {
 		return new Promise((resolve) => {
-			firebase
+			const unsubscribe = firebase
 				.firestore()
 				.collection(resource)
 				.doc(id)
@@ -96,12 +123,16 @@ export default {
 					commit('setItem', { resource, item })
 					resolve(item)
 				})
+			commit('appendUnsubscribe', { unsubscribe })
 		})
 	},
 
 	fetchItems({ dispatch }, { ids, resource }) {
-		return Promise.all(ids.map((id) => dispatch('fetchItem', { resource, id }))).catch((error) => {
-			console.log(error)
-		})
+		return Promise.all(ids.map((id) => dispatch('fetchItem', { resource, id })))
+	},
+
+	async unsubscribeSnapshots({ state, commit }) {
+		state.unsubscribes.forEach((unsubscribe) => unsubscribe())
+		commit('clearUnsubscribes')
 	},
 }

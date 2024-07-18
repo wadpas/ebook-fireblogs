@@ -14,13 +14,13 @@ export default {
 					return state.posts.filter((post) => post.userId === user.id)
 				},
 				get postsCount() {
-					return this.posts.length
+					return user.postsCount || 0
 				},
 				get threads() {
 					return state.threads.filter((thread) => thread.userId === user.id)
 				},
 				get threadsCount() {
-					return this.threads.length
+					return user.threads?.length || 0
 				},
 			}
 		}
@@ -35,10 +35,10 @@ export default {
 					return findById(state.users, thread.userId)
 				},
 				get repliesCount() {
-					return thread.posts.length - 1
+					return thread.posts?.length - 1 || 0
 				},
 				get contributorsCount() {
-					return thread.contributors.length
+					return thread.contributors?.length || 0
 				},
 			}
 		}
