@@ -19,6 +19,11 @@ import firebase from 'firebase/app'
 import FontAwesome from './plugins/FontAwesome'
 
 firebase.initializeApp(firebaseConfig)
+firebase.auth().onAuthStateChanged((user) => {
+	if (user) {
+		store.dispatch('fetchAuthUser')
+	}
+})
 
 createApp(App)
 	.use(store)

@@ -6,6 +6,7 @@ import ThreadEdit from '../views/ThreadEdit.vue'
 import ForumView from '../views/ForumView.vue'
 import NotFound from '../views/NotFoundView.vue'
 import ProfileView from '../views/ProfileView.vue'
+import RegisterView from '../views/RegisterView.vue'
 import store from '../store/index'
 
 const routes = [
@@ -51,8 +52,12 @@ const routes = [
 		props: true,
 	},
 	{
+		path: '/register',
+		name: 'Register',
+		component: RegisterView,
+	},
+	{
 		path: '/:pathMatch(.*)*',
-		name: 'NotFound',
 		component: NotFound,
 	},
 ]

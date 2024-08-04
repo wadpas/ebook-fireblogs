@@ -15,7 +15,7 @@ export default {
 			contributors: firebase.firestore.FieldValue.arrayUnion(post.userId),
 		})
 		batch.update(userRef, {
-			postCount: firebase.firestore.FieldValue.increment(1),
+			postsCount: firebase.firestore.FieldValue.increment(1),
 		})
 		await batch.commit()
 		const newPost = await postRef.get()
@@ -81,6 +81,23 @@ export default {
 		return docToResource(newThread)
 	},
 
+	async registerUserWithEmailAndPassword({ dispatch }, { avatar = null, email, name, username, password }) {
+		const result = await firebase.auth().createUserWithEmailAndPassword(email, password)
+		await dispatch('createUser', { id: result.user.uid, email, name, username, avatar })
+	},
+
+	async createUser({ commit }, { id, email, name, username, avatar }) {
+		const registeredAt = firebase.firestore.FieldValue.serverTimestamp()
+		const usernameLower = username.toLowerCase()
+		email = email.toLowerCase()
+		const user = { email, name, username, usernameLower, avatar, registeredAt }
+		const userRef = await firebase.firestore().collection('users').doc(id)
+		userRef.set(user)
+		const newUser = await userRef.get()
+		commit('setItem', { resource: 'users', item: newUser })
+		return docToResource(newUser)
+	},
+
 	updateUser({ commit }, user) {
 		commit('setItem', { resource: 'users', item: user.id })
 	},
@@ -89,7 +106,12 @@ export default {
 	fetchForum: ({ dispatch }, { id }) => dispatch('fetchItem', { resource: 'forums', id }),
 	fetchPost: ({ dispatch }, { id }) => dispatch('fetchItem', { resource: 'posts', id }),
 	fetchUser: ({ dispatch }, { id }) => dispatch('fetchItem', { resource: 'users', id }),
-	fetchAuthUser: ({ dispatch, state }) => dispatch('fetchItem', { resource: 'users', id: state.authId }),
+	fetchAuthUser: ({ dispatch, state, commit }) => {
+		const userId = firebase.auth().currentUser?.uid
+		if (!userId) return
+		dispatch('fetchItem', { resource: 'users', id: userId })
+		commit('setAuthId', userId)
+	},
 
 	fetchAllCategories({ commit }) {
 		return new Promise((resolve) => {
