@@ -7,7 +7,7 @@ export default {
 	user: (state) => {
 		return (id) => {
 			const user = findById(state.users, id)
-			if (!user) return {}
+			if (!user) return null
 			return {
 				...user,
 				get posts() {

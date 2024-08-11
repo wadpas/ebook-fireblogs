@@ -7,6 +7,7 @@ import ForumView from '../views/ForumView.vue'
 import NotFound from '../views/NotFoundView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import RegisterView from '../views/RegisterView.vue'
+import SingInView from '../views/SingInView.vue'
 import store from '../store/index'
 
 const routes = [
@@ -53,8 +54,13 @@ const routes = [
 	},
 	{
 		path: '/register',
-		name: 'Register',
+		name: 'RegisterView',
 		component: RegisterView,
+	},
+	{
+		path: '/signin',
+		name: 'SingInView',
+		component: SingInView,
 	},
 	{
 		path: '/:pathMatch(.*)*',

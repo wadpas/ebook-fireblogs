@@ -7,7 +7,7 @@ export default {
 		post.publishedAt = firebase.firestore.FieldValue.serverTimestamp()
 		const postRef = firebase.firestore().collection('posts').doc()
 		const threadRef = firebase.firestore().collection('threads').doc(post.threadId)
-		const userRef = firebase.firestore().collection('threads').doc(state.authId)
+		const userRef = firebase.firestore().collection('users').doc(state.authId)
 		const batch = firebase.firestore().batch()
 		batch.set(postRef, post)
 		batch.update(threadRef, {
@@ -47,6 +47,8 @@ export default {
 		const userRef = firebase.firestore().collection('users').doc(userId)
 		const forumRef = firebase.firestore().collection('forums').doc(forumId)
 		const batch = firebase.firestore().batch()
+		console.log(userRef)
+
 		batch.set(threadRef, thread)
 		batch.update(userRef, {
 			threads: firebase.firestore.FieldValue.arrayUnion(threadRef.id),
@@ -86,6 +88,32 @@ export default {
 		await dispatch('createUser', { id: result.user.uid, email, name, username, avatar })
 	},
 
+	async signInWithUserWithEmailAndPassword(context, { email, password }) {
+		return firebase.auth().signInWithEmailAndPassword(email, password)
+	},
+
+	async signInWithGoogle({ dispatch }) {
+		const provider = new firebase.auth.GoogleAuthProvider()
+		const response = await firebase.auth().signInWithPopup(provider)
+		const user = response.user
+		const userRef = await firebase.firestore().collection('users').doc(user.uid)
+		const userDoc = await userRef.get()
+		if (!userDoc.exists) {
+			return dispatch('createUser', {
+				id: user.uid,
+				email: user.email,
+				name: user.displayName,
+				username: user.email.split('@')[0],
+				avatar: user.photoURL,
+			})
+		}
+	},
+
+	async signOut({ commit }) {
+		await firebase.auth().signOut()
+		commit('setAuthId', null)
+	},
+
 	async createUser({ commit }, { id, email, name, username, avatar }) {
 		const registeredAt = firebase.firestore.FieldValue.serverTimestamp()
 		const usernameLower = username.toLowerCase()
@@ -109,7 +137,13 @@ export default {
 	fetchAuthUser: ({ dispatch, state, commit }) => {
 		const userId = firebase.auth().currentUser?.uid
 		if (!userId) return
-		dispatch('fetchItem', { resource: 'users', id: userId })
+		dispatch('fetchItem', {
+			resource: 'users',
+			id: userId,
+			handleUnsubscribe: (unsubscribe) => {
+				commit('setAuthUserUnsubscribe', unsubscribe)
+			},
+		})
 		commit('setAuthId', userId)
 	},
 
@@ -134,7 +168,7 @@ export default {
 	fetchUsers: ({ dispatch }, { ids }) => dispatch('fetchItems', { resource: 'users', ids }),
 	fetchPosts: ({ dispatch }, { ids }) => dispatch('fetchItems', { resource: 'posts', ids }),
 
-	fetchItem({ state, commit }, { id, resource }) {
+	fetchItem({ state, commit }, { id, resource, handleUnsubscribe = null }) {
 		return new Promise((resolve) => {
 			const unsubscribe = firebase
 				.firestore()
@@ -145,7 +179,11 @@ export default {
 					commit('setItem', { resource, item })
 					resolve(item)
 				})
-			commit('appendUnsubscribe', { unsubscribe })
+			if (handleUnsubscribe) {
+				handleUnsubscribe(unsubscribe)
+			} else {
+				commit('appendUnsubscribe', { unsubscribe })
+			}
 		})
 	},
 
@@ -156,5 +194,12 @@ export default {
 	async unsubscribeSnapshots({ state, commit }) {
 		state.unsubscribes.forEach((unsubscribe) => unsubscribe())
 		commit('clearUnsubscribes')
+	},
+
+	async unsubscribeAuthUserSnapshot({ state, commit }) {
+		if (state.authUserUnsubscribe) {
+			state.authUserUnsubscribe()
+			commit('setAuthUserUnsubscribe', null)
+		}
 	},
 }
