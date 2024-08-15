@@ -31,9 +31,11 @@
 		props: {
 			edit: { type: Boolean, default: false },
 		},
-
 		computed: {
 			...mapGetters({ user: ['authUser'] }),
+		},
+		async created() {
+			await this.$store.dispatch('fetchAuthUsersPosts')
 		},
 	}
 </script>

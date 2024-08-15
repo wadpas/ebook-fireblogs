@@ -8,7 +8,9 @@
 		</h1>
 		<ThreadEditor
 			@save="save"
-			@cancel="cancel" />
+			@cancel="cancel"
+			@dirty="formIsDirty = true"
+			@clean="formIsDirty = false" />
 	</div>
 </template>
 
@@ -32,6 +34,7 @@
 			return {
 				title: '',
 				text: '',
+				formIsDirty: false,
 			}
 		},
 		methods: {
@@ -50,6 +53,12 @@
 		},
 		created() {
 			this.fetchForum({ id: this.forumId })
+		},
+		beforeRouteLeave() {
+			if (this.formIsDirty) {
+				const confirmed = window.confirm('Are you sure you want to leave?')
+				if (!confirmed) return false
+			}
 		},
 	}
 </script>

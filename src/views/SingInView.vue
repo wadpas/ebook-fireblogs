@@ -32,7 +32,7 @@
 				</div>
 
 				<div class="form-actions text-right">
-					<router-link :to="{ name: 'SingInView' }">Create account</router-link>
+					<router-link :to="{ name: 'RegisterView' }">Create account</router-link>
 				</div>
 			</form>
 

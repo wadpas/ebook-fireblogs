@@ -20,12 +20,13 @@ const routes = [
 		path: '/me',
 		name: 'ProfileView',
 		component: ProfileView,
-		meta: { toTop: true, smoothScroll: true },
+		meta: { toTop: true, smoothScroll: true, requestAuth: true },
 	},
 	{
 		path: '/me/edit',
 		name: 'ProfileEditView',
 		component: ProfileView,
+		meta: { requestAuth: true },
 		props: { edit: true },
 	},
 	{
@@ -45,22 +46,34 @@ const routes = [
 		name: 'ThreadCreate',
 		component: ThreadCreate,
 		props: true,
+		meta: { requestAuth: true },
 	},
 	{
 		path: '/threads/:id/edit',
 		name: 'ThreadEdit',
 		component: ThreadEdit,
 		props: true,
+		meta: { requestAuth: true },
 	},
 	{
 		path: '/register',
 		name: 'RegisterView',
 		component: RegisterView,
+		meta: { requiresGest: true },
 	},
 	{
 		path: '/signin',
 		name: 'SingInView',
 		component: SingInView,
+		meta: { requiresGest: true },
+	},
+	{
+		path: '/logout',
+		name: 'SignOut',
+		async beforeEnter(to, from) {
+			await store.dispatch('signOut')
+			return { name: 'HomeView' }
+		},
 	},
 	{
 		path: '/:pathMatch(.*)*',
@@ -78,8 +91,16 @@ const router = createRouter({
 		return scroll
 	},
 })
-router.beforeEach(() => {
+
+router.beforeEach(async (to, from) => {
+	await store.dispatch('initAuthentication')
 	store.dispatch('unsubscribeSnapshots')
+	if (to.meta.requestAuth && !store.state.authId) {
+		return { name: 'SingInView' }
+	}
+	if (to.meta.requiresGest && store.state.authId) {
+		return { name: 'HomeView' }
+	}
 })
 
 export default router
