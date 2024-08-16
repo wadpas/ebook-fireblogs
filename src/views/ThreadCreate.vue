@@ -27,7 +27,7 @@
 		},
 		computed: {
 			forum() {
-				return findById(this.$store.state.forums, this.forumId)
+				return findById(this.$store.state.forums.items, this.forumId)
 			},
 		},
 		data() {
@@ -38,7 +38,8 @@
 			}
 		},
 		methods: {
-			...mapActions(['fetchForum', 'createThread']),
+			...mapActions('forums', ['fetchForum']),
+			...mapActions('threads', ['createThread']),
 			async save({ title, text }) {
 				const newThread = await this.createThread({
 					forumId: this.forumId,

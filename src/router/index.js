@@ -71,7 +71,7 @@ const routes = [
 		path: '/logout',
 		name: 'SignOut',
 		async beforeEnter(to, from) {
-			await store.dispatch('signOut')
+			await store.dispatch('auth/signOut')
 			return { name: 'HomeView' }
 		},
 	},
@@ -93,12 +93,12 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from) => {
-	await store.dispatch('initAuthentication')
+	await store.dispatch('auth/initAuthentication')
 	store.dispatch('unsubscribeSnapshots')
-	if (to.meta.requestAuth && !store.state.authId) {
+	if (to.meta.requestAuth && !store.state.auth.authId) {
 		return { name: 'SingInView' }
 	}
-	if (to.meta.requiresGest && store.state.authId) {
+	if (to.meta.requiresGest && store.state.auth.authId) {
 		return { name: 'HomeView' }
 	}
 })

@@ -18,6 +18,7 @@
 
 <script>
 	import { mapActions } from 'vuex'
+	import { findById } from '../helpers/index'
 
 	export default {
 		props: {
@@ -25,15 +26,17 @@
 		},
 		computed: {
 			forum() {
-				return this.$store.state.forums.find((forum) => forum.id === this.id)
+				return findById(this.$store.state.forums.items, this.id)
 			},
 			threads() {
 				if (!this.forum) return []
-				return this.forum.threads.map((threadId) => this.$store.getters.thread(threadId))
+				return this.forum.threads.map((threadId) => this.$store.getters['threads/thread'](threadId))
 			},
 		},
 		methods: {
-			...mapActions(['fetchForum', 'fetchThreads', 'fetchUsers']),
+			...mapActions('forums', ['fetchForum']),
+			...mapActions('threads', ['fetchThreads']),
+			...mapActions('users', ['fetchUsers']),
 		},
 		async created() {
 			const forum = await this.fetchForum({ id: this.id })

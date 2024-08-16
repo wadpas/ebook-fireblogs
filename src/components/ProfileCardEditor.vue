@@ -113,7 +113,7 @@
 		},
 		methods: {
 			save() {
-				this.$store.dispatch('updateUser', { ...this.activeUser })
+				this.$store.dispatch('users/updateUser', { ...this.activeUser })
 				this.$router.push({ name: 'ProfileView' })
 			},
 			cancel() {

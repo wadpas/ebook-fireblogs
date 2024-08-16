@@ -12,7 +12,7 @@
 
 	export default {
 		methods: {
-			...mapActions(['fetchAuthUser']),
+			...mapActions('auth', ['fetchAuthUser']),
 		},
 		created() {
 			this.fetchAuthUser()

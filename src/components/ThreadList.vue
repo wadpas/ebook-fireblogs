@@ -45,7 +45,7 @@
 
 		methods: {
 			userById(userId) {
-				return findById(this.$store.state.users, userId) || {}
+				return findById(this.$store.state.users.items, userId) || {}
 			},
 		},
 	}

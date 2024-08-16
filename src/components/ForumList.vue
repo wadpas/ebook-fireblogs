@@ -6,14 +6,14 @@
 			<router-link
 				:to="{ name: 'ForumView', params: { id: forumId } }"
 				class="text-xlarge">
-				{{ forumById(forumId).name }}
+				{{ forum(forumId)?.name }}
 			</router-link>
-			<p>{{ forumById(forumId).description }}</p>
+			<p>{{ forum(forumId)?.description }}</p>
 		</div>
 		<div class="threads-count">
 			<p>
-				<span class="count">{{ forumById(forumId).threads?.length }}</span>
-				{{ forumById(forumId).threads?.length > 1 ? 'threads' : 'thread' }}
+				<span class="count">{{ forum(forumId)?.threads.length }}</span>
+				{{ forum(forumId)?.threads.length > 1 ? 'threads' : 'thread' }}
 			</p>
 		</div>
 		<div class="last-thread"></div>
@@ -21,17 +21,16 @@
 </template>
 
 <script>
+	import { findById } from '../helpers/index'
+
 	export default {
 		props: {
 			forumIds: Array,
 		},
 
 		methods: {
-			userById(userId) {
-				return this.$store.getters.user(userId)
-			},
-			forumById(forumId) {
-				return this.$store.getters.forum(forumId)
+			forum(id) {
+				return findById(this.$store.state.forums.items, id)
 			},
 		},
 	}

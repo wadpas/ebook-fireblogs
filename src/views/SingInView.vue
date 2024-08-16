@@ -61,14 +61,14 @@
 		methods: {
 			async signIn() {
 				try {
-					await this.$store.dispatch('signInWithUserWithEmailAndPassword', { ...this.form })
+					await this.$store.dispatch('auth/signInWithUserWithEmailAndPassword', { ...this.form })
 					this.$router.push('/')
 				} catch (error) {
 					alert(error.message)
 				}
 			},
 			async signInWithGoogle() {
-				await this.$store.dispatch('signInWithGoogle')
+				await this.$store.dispatch('auth/signInWithGoogle')
 				this.$router.push('/')
 			},
 			created() {

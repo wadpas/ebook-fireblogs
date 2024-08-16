@@ -1,6 +1,6 @@
 <template>
 	<h1>
-		{{ thread.title }}
+		{{ thread?.title }}
 
 		<router-link
 			:to="{ name: 'ThreadEdit', id: this.id }"
@@ -14,14 +14,14 @@
 		<a
 			href="#"
 			class="link-unstyled">
-			{{ thread.author?.name }}
+			{{ thread?.author?.name }}
 		</a>
 		,
-		<AppDate :timestamp="thread.publishedAt" />
+		<AppDate :timestamp="thread?.publishedAt" />
 		<span
 			style="float: right; margin-top: 2px"
 			class="hide-mobile text-faded text-small">
-			{{ thread.posts?.length - 1 }} replies by {{ thread.contributors?.length }} contributors
+			{{ thread?.posts?.length - 1 }} replies by {{ thread?.contributors?.length }} contributors
 		</span>
 	</p>
 	<PostList :posts="threadPosts" />
@@ -41,20 +41,22 @@
 		},
 		computed: {
 			posts() {
-				return this.$store.state.posts
+				return this.$store.state.posts.items
 			},
 			users() {
-				return this.$store.state.users
+				return this.$store.state.users.items
 			},
 			thread() {
-				return this.$store.getters.thread(this.id)
+				return this.$store.getters['threads/thread'](this.id)
 			},
 			threadPosts() {
 				return this.posts.filter((post) => post.threadId === this.id)
 			},
 		},
 		methods: {
-			...mapActions(['fetchThread', 'fetchUsers', 'fetchPosts', 'createPost']),
+			...mapActions('threads', ['fetchThread']),
+			...mapActions('users', ['fetchUsers']),
+			...mapActions('posts', ['fetchPosts', 'createPost']),
 			addPost(eventData) {
 				const post = { ...eventData.post, threadId: this.id }
 				this.createPost(post)
