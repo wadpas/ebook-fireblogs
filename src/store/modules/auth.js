@@ -31,7 +31,17 @@ export default {
 
 		async registerUserWithEmailAndPassword({ dispatch }, { avatar = null, email, name, username, password }) {
 			const result = await firebase.auth().createUserWithEmailAndPassword(email, password)
+			avatar = await dispatch('uploadAvatar', { authId: result.user.uid, file: avatar })
 			await dispatch('users/createUser', { id: result.user.uid, email, name, username, avatar }, { root: true })
+		},
+
+		async uploadAvatar({ state }, { authId, file }) {
+			if (!file) return null
+			authId = authId || state.authId
+			const storageBucket = firebase.storage().ref().child(`uploads/${authId}/images/${Date.now()}-${file.name}`)
+			const snapshot = await storageBucket.put(file)
+			const url = await snapshot.ref.getDownloadURL()
+			return url
 		},
 
 		async signInWithUserWithEmailAndPassword(context, { email, password }) {
@@ -77,8 +87,14 @@ export default {
 			commit('setAuthId', userId)
 		},
 
-		async fetchAuthUsersPosts({ commit, state }) {
-			const posts = await firebase.firestore().collection('posts').where('userId', '==', state.authId).get()
+		async fetchAuthUsersPosts({ commit, state }, { startAfter }) {
+			const posts = await firebase
+				.firestore()
+				.collection('posts')
+				.orderBy('publishedAt', 'desc')
+				.limit(10)
+				.where('userId', '==', state.authId)
+				.get()
 			posts.forEach((post) => {
 				commit('setItem', { resource: 'posts', item: post.data() }, { root: true })
 			})

@@ -17,6 +17,9 @@ import ThreadEditor from './components/ThreadEditor.vue'
 import firebaseConfig from './config/firebase'
 import firebase from 'firebase/app'
 import FontAwesome from './plugins/FontAwesome'
+import ClickOutsideDirective from './plugins/ClickOutsideDirective'
+import PageScrollDirective from './plugins/PageScrollDirective'
+import VeeValidatePlugin from './plugins/VeeValidatePlugin'
 
 firebase.initializeApp(firebaseConfig)
 
@@ -24,6 +27,9 @@ createApp(App)
 	.use(store)
 	.use(router)
 	.use(FontAwesome)
+	.use(ClickOutsideDirective)
+	.use(PageScrollDirective)
+	.use(VeeValidatePlugin)
 	.component('AppDate', AppDate)
 	.component('PostList', PostList)
 	.component('PostEditor', PostEditor)

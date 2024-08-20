@@ -1,11 +1,25 @@
 <template>
 	<div class="profile-card">
 		<form @submit.prevent="save">
-			<p class="text-center">
-				<img
-					:src="user.avatar"
-					:alt="`{user.name} profile picture`"
-					class="avatar-xlarge img-update" />
+			<p class="text-center avatar-edit">
+				<label for="avatar">
+					<img
+						:src="user.avatar"
+						:alt="`{user.name} profile picture`"
+						class="avatar-xlarge img-update" />
+					<div class="avatar-upload-overlay">
+						<fa
+							icon="camera"
+							size="3x"
+							:style="{ color: 'white', opacity: '8' }" />
+					</div>
+					<input
+						v-show="false"
+						type="file"
+						id="avatar"
+						accept="image/*"
+						@change="handleAvatarUpload" />
+				</label>
 			</p>
 
 			<div class="form-group">
@@ -85,7 +99,7 @@
 			<div class="btn-group space-between">
 				<button
 					class="btn-ghost"
-					@click="cancel">
+					@click.prevent="cancel">
 					Cancel
 				</button>
 				<button
@@ -99,6 +113,7 @@
 </template>
 
 <script>
+	import { mapActions } from 'vuex'
 	export default {
 		data() {
 			return {
@@ -112,6 +127,11 @@
 			},
 		},
 		methods: {
+			...mapActions('auth', ['uploadAvatar']),
+			async handleAvatarUpload(e) {
+				const file = e.target.files[0]
+				this.activeUser.avatar = await this.uploadAvatar({ file })
+			},
 			save() {
 				this.$store.dispatch('users/updateUser', { ...this.activeUser })
 				this.$router.push({ name: 'ProfileView' })

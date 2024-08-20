@@ -1,28 +1,34 @@
 <template>
 	<header
 		class="header"
-		id="header">
+		id="header"
+		v-click-outside="() => (mobileNavMenu = false)"
+		v-page-scroll="() => (mobileNavMenu = false)">
 		<router-link
 			:to="{ name: 'HomeView' }"
 			class="logo">
 			<img src="../assets/vueschool-logo.svg" />
 		</router-link>
 
-		<div class="btn-hamburger">
+		<div
+			class="btn-hamburger"
+			@click="mobileNavMenu = !mobileNavMenu">
 			<!-- use .btn-humburger-active to open the menu -->
 			<div class="top bar"></div>
 			<div class="middle bar"></div>
 			<div class="bottom bar"></div>
 		</div>
-
 		<!-- use .navbar-open to open nav -->
-		<nav class="navbar">
+		<nav
+			class="navbar"
+			:class="{ 'navbar-open': mobileNavMenu }">
 			<ul>
 				<li
 					v-if="authUser"
 					class="navbar-user">
 					<a
 						@click.prevent="userDropdownOpen = !userDropdownOpen"
+						v-click-outside="() => (userDropdownOpen = false)"
 						href="#">
 						<img
 							class="avatar-small"
@@ -36,7 +42,6 @@
 								alt="" />
 						</span>
 					</a>
-
 					<!-- dropdown menu -->
 					<!-- add class "active-drop" to show the dropdown -->
 					<div
@@ -61,6 +66,16 @@
 					v-if="!authUser"
 					class="navbar-item">
 					<router-link :to="{ name: 'RegisterView' }">Register</router-link>
+				</li>
+				<li
+					v-if="authUser"
+					class="navbar-mobile-item">
+					<router-link :to="{ name: 'ProfileView' }">View Profile</router-link>
+				</li>
+				<li
+					v-if="authUser"
+					class="navbar-mobile-item">
+					<a @click.prevent="$store.dispatch('auth/signOut'), $router.push({ name: 'SingInView' })">Sign Out</a>
 				</li>
 			</ul>
 
@@ -95,10 +110,16 @@
 		data() {
 			return {
 				userDropdownOpen: false,
+				mobileNavMenu: false,
 			}
 		},
 		computed: {
 			...mapGetters('auth', ['authUser']),
+		},
+		created() {
+			this.$router.beforeEach((to, from) => {
+				this.mobileNavMenu = false
+			})
 		},
 	}
 </script>

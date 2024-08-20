@@ -1,26 +1,36 @@
 <template>
 	<div class="flex-grid justify-center">
 		<div class="col-2">
-			<form
-				@submit.prevent="signIn"
+			<VeeForm
+				@submit="signIn"
 				class="card card-form">
 				<h1 class="text-center">Login</h1>
 
 				<div class="form-group">
 					<label for="email">Email</label>
-					<input
+					<VeeField
+						name="email"
 						id="email"
 						v-model="form.email"
 						type="text"
-						class="form-input" />
+						class="form-input"
+						rules="required" />
+					<VeeErrorMessage
+						name="email"
+						class="form-error" />
 				</div>
 				<div class="form-group">
 					<label for="password">Password</label>
-					<input
+					<VeeField
+						name="password"
 						id="password"
 						v-model="form.password"
 						type="password"
-						class="form-input" />
+						class="form-input"
+						rules="required" />
+					<VeeErrorMessage
+						name="password"
+						class="form-error" />
 				</div>
 
 				<div class="push-top">
@@ -34,7 +44,7 @@
 				<div class="form-actions text-right">
 					<router-link :to="{ name: 'RegisterView' }">Create account</router-link>
 				</div>
-			</form>
+			</VeeForm>
 
 			<div
 				@click="signInWithGoogle"
