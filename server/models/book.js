@@ -26,10 +26,6 @@ const BookSchema = mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		publishing_house: {
-			type: String,
-			required: true,
-		},
 	},
 	{
 		timestamps: true,

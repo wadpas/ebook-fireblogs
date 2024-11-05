@@ -1,11 +1,11 @@
 const Forum = require('../models/forum')
-const Movie = require('../models/movie')
+const Book = require('../models/book')
 const { StatusCodes } = require('http-status-codes')
 const { BadRequestError, NotFoundError } = require('../errors')
 
-const getMovies = async (req, res) => {
+const getBooks = async (req, res) => {
 	const { year = 2015, limit = 12, page = 1, sort = -1 } = req.query
-	const movies = await Movie.find({ year: year })
+	const movies = await Book.find({ year: year })
 		.limit(limit)
 		.skip(limit * (page - 1))
 		.sort({ released: sort })
@@ -13,9 +13,9 @@ const getMovies = async (req, res) => {
 	res.status(StatusCodes.OK).json({ movies, count: movies.length })
 }
 
-const getMovie = async (req, res) => {
+const getBook = async (req, res) => {
 	const { id } = req.params
-	const movie = await Movie.findById({ _id: id })
+	const movie = await Book.findById({ _id: id })
 	if (!movie) {
 		throw new NotFoundError(`No forum with id ${id}`)
 	}
@@ -59,10 +59,16 @@ const deleteForum = async (req, res) => {
 	res.status(StatusCodes.OK).send()
 }
 
+const addBooks = async (req, res) => {
+	const books = await Book.insertMany(req.body)
+	res.status(StatusCodes.CREATED).json({ books, count: books.length })
+}
+
 module.exports = {
-	getMovies,
+	getBooks,
 	createForum,
-	getMovie,
+	getBook,
 	updateForum,
 	deleteForum,
+	addBooks,
 }
