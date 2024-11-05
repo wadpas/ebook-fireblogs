@@ -1,32 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	font-family: 'Quicksand', sans-serif;
-}
 
-.app {
-	display: flex;
-	flex-direction: column;
+body {
 	min-height: 100vh;
+	font-family: 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+	font-size: 15px;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
-.container {
-	max-width: 1440px;
+#app {
+	min-height: 100vh;
+	background: #fff;
 	margin: 0 auto;
-}
-
-.link {
-	cursor: pointer;
-	text-decoration: none;
-	text-transform: uppercase;
-	color: black;
-}
-
-.link-light {
-	color: #fff;
+	font-weight: normal;
 }
