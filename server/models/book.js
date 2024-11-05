@@ -16,7 +16,7 @@ const BookSchema = mongoose.Schema(
 		},
 		description: {
 			type: String,
-			maxlength: [1000, 'Description field can not be more than 50 characters'],
+			maxlength: [1000, 'Description field can not be more than 1000 characters'],
 			required: [true, 'Description field is required'],
 			trim: true,
 		},
