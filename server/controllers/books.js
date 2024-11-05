@@ -1,16 +1,15 @@
-const Forum = require('../models/forum')
 const Book = require('../models/book')
 const { StatusCodes } = require('http-status-codes')
 const { BadRequestError, NotFoundError } = require('../errors')
 
 const getBooks = async (req, res) => {
-	const { year = 2015, limit = 12, page = 1, sort = -1 } = req.query
-	const movies = await Book.find({ year: year })
+	const { limit = 12, page = 1, sort = -1 } = req.query
+	const books = await Book.find()
 		.limit(limit)
 		.skip(limit * (page - 1))
 		.sort({ released: sort })
 
-	res.status(StatusCodes.OK).json({ movies, count: movies.length })
+	res.status(StatusCodes.OK).json({ books, count: books.length })
 }
 
 const getBook = async (req, res) => {
@@ -22,13 +21,13 @@ const getBook = async (req, res) => {
 	res.status(StatusCodes.OK).json(movie)
 }
 
-const createForum = async (req, res) => {
+const createBook = async (req, res) => {
 	req.body.createdBy = req.user.userId
-	const forum = await Forum.create(req.body)
+	const forum = await Book.create(req.body)
 	res.status(StatusCodes.CREATED).json({ forum })
 }
 
-const updateForum = async (req, res) => {
+const updateBook = async (req, res) => {
 	const {
 		body: { description, name },
 		params: { id: forumId },
@@ -37,7 +36,7 @@ const updateForum = async (req, res) => {
 	if (description === '' || name === '') {
 		throw new BadRequestError('Description and name fields cannot be empty')
 	}
-	const forum = await Forum.findOneAndUpdate({ _id: forumId, createdBy: userId }, req.body, {
+	const forum = await Book.findOneAndUpdate({ _id: forumId, createdBy: userId }, req.body, {
 		new: true,
 		runValidation: true,
 	})
@@ -47,12 +46,12 @@ const updateForum = async (req, res) => {
 	res.status(StatusCodes.OK).json({ forum })
 }
 
-const deleteForum = async (req, res) => {
+const deleteBook = async (req, res) => {
 	const {
 		user: { userId },
 		params: { id: forumId },
 	} = req
-	const forum = await Forum.findOneAndDelete({ _id: forumId, createdBy: userId })
+	const forum = await Book.findOneAndDelete({ _id: forumId, createdBy: userId })
 	if (!forum) {
 		throw new NotFoundError(`No forum with id ${forumId}`)
 	}
@@ -60,15 +59,16 @@ const deleteForum = async (req, res) => {
 }
 
 const addBooks = async (req, res) => {
+	await Book.deleteMany({})
 	const books = await Book.insertMany(req.body)
 	res.status(StatusCodes.CREATED).json({ books, count: books.length })
 }
 
 module.exports = {
 	getBooks,
-	createForum,
+	createBook,
 	getBook,
-	updateForum,
-	deleteForum,
+	updateBook,
+	deleteBook,
 	addBooks,
 }
