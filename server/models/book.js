@@ -26,13 +26,15 @@ const BookSchema = mongoose.Schema(
 			required: [true, 'Year field is required'],
 			trim: true,
 		},
-		genre: {
-			type: [String],
-			required: [true, 'Genre field is required'],
-			trim: true,
-		},
-		images: {
-			type: [String],
+		genre: [
+			{
+				type: String,
+				required: [true, 'Genre field is required'],
+				trim: true,
+			},
+		],
+		image: {
+			type: String,
 			required: [true, 'Images field is required'],
 			trim: true,
 		},

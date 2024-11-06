@@ -14,6 +14,11 @@ const BannerSchema = new mongoose.Schema(
 			required: [true, 'Description field is required'],
 			trim: true,
 		},
+		image: {
+			type: String,
+			required: [true, 'Image field is required'],
+			trim: true,
+		},
 		button: {
 			type: String,
 			maxlength: [20, 'Button field can not be more than 20 characters'],
