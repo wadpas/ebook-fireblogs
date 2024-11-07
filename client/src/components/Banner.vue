@@ -18,7 +18,6 @@
 </template>
 
 <script setup>
-	import IconArrow from './icons/IconArrow.vue'
 	const { banner } = defineProps({
 		banner: Object,
 	})
@@ -61,11 +60,14 @@
 					}
 				}
 				.link {
+					padding: 4px 16px;
+					border-radius: 5%;
 					display: inline-flex;
 					align-items: center;
 					padding: 4px 6px;
 					margin-top: 8px;
 					background-color: aliceblue;
+					transition: 0.5s ease all;
 					&:hover {
 						color: #249afc;
 					}

@@ -4,6 +4,7 @@ import axiosInstance from '../plugins/axiosInstance'
 
 export const useBooksStore = defineStore('books', () => {
 	const banners = ref([])
+	const books = ref([])
 
 	async function getBanners() {
 		try {
@@ -14,5 +15,14 @@ export const useBooksStore = defineStore('books', () => {
 		}
 	}
 
-	return { banners, getBanners }
+	async function getBooks() {
+		try {
+			const response = await axiosInstance.get('/books')
+			books.value = response.data.books
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	return { banners, books, getBanners, getBooks }
 })
