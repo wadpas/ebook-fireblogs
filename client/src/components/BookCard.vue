@@ -97,7 +97,7 @@
 			padding: 4px 16px;
 			border-radius: 5%;
 			max-width: fit-content;
-			margin-left: -5px;
+			margin-left: -15px;
 			background-color: aliceblue;
 			transition: 0.5s ease all;
 			&:hover {
