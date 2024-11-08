@@ -29,11 +29,11 @@
 						v-model="data.password" />
 				</div>
 			</div>
-			<p class="login-register">
+			<p>
 				Забув пароль?
 				<router-link :to="{ name: 'forgot' }">Відновити</router-link>
 			</p>
-			<button class="login-btn">Увійти</button>
+			<button class="px-4 py-2 mt-8 login-btn">Увійти</button>
 			<router-link :to="{ name: 'home' }">Пропустити</router-link>
 		</form>
 	</div>
@@ -122,8 +122,6 @@
 		}
 
 		.login-btn {
-			width: 100px;
-			padding: 4px 16px;
 			border-radius: 5%;
 			align-self: center;
 			background-color: #249afc;
