@@ -12,11 +12,7 @@
 		<div class="info">
 			<h1>{{ book.title }}</h1>
 			<h2>{{ book.author }}</h2>
-			<router-link
-				class="link"
-				to="#">
-				Детальніше >
-			</router-link>
+			<router-link to="#">Детальніше ></router-link>
 		</div>
 	</div>
 </template>
@@ -55,7 +51,7 @@
 				height: 35px;
 				border-radius: 50%;
 				background-color: white;
-				transition: 0.5s ease all;
+				transition: 0.2s ease all;
 				opacity: 90%;
 
 				&:hover {
@@ -93,14 +89,15 @@
 		h2 {
 			font-style: italic;
 		}
-		.link {
+		a {
 			padding: 4px 16px;
 			border-radius: 5%;
 			max-width: fit-content;
 			margin-left: -15px;
 			background-color: aliceblue;
-			transition: 0.5s ease all;
+			transition: 0.2s ease all;
 			&:hover {
+				color: #249afc;
 				font-weight: bold;
 			}
 		}

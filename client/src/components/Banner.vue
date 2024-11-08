@@ -4,11 +4,7 @@
 			<div>
 				<h2>{{ banner.title }}</h2>
 				<p class="content-preview">{{ banner.description }}</p>
-				<router-link
-					class="link"
-					to="#">
-					{{ banner.button }} >
-				</router-link>
+				<router-link to="#">{{ banner.button }} ></router-link>
 			</div>
 		</div>
 		<div class="banner-photo">
@@ -59,7 +55,7 @@
 						font-size: 24px;
 					}
 				}
-				.link {
+				a {
 					padding: 4px 16px;
 					border-radius: 5%;
 					display: inline-flex;
@@ -67,9 +63,10 @@
 					padding: 4px 6px;
 					margin-top: 8px;
 					background-color: aliceblue;
-					transition: 0.5s ease all;
+					transition: 0.2s ease all;
 					&:hover {
 						color: #249afc;
+						font-weight: bold;
 					}
 				}
 			}
